@@ -9,12 +9,13 @@ import json
 import openai
 import logging
 
-logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
-print("Logging Active")
+#logger = logging.getLogger('discord')
+#logger.setLevel(logging.DEBUG)
+#handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+#handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+#logger.addHandler(handler)
+#print("Logging Active")
+
 
 #for member caching
 intents = discord.Intents.default()
@@ -113,13 +114,16 @@ async def on_message(message):
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
   if msg.startswith('6talk'):
-    print(msg)
+    logging.info('User said to AI: ' + msg[6:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
     await message.channel.send(message.author.mention + response)
 
+  #trigger to have a constant conversation with ai
   if msg.startswith('6convo'):
+    return
     while True:
+      logging.info('User said to AI: ' + msg[6:])
       content = msg.partition(" ")[2]
       response = open_ai(content)
       await message.channel.send(message.author.mention + response)
