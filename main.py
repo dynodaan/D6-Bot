@@ -61,6 +61,12 @@ def get_cat_images():
   cat_image = str(json_data[0]['url'])
   return(cat_image)
 
+def get_yesno_images():
+  response = requests.get("https://yesno.wtf/api?ref=apilist.fun")
+  json_data = json.loads(response.text)
+  yesno_image = str(json_data[0]['answer']) + json_data[0]['image']
+  return(yesno_image)
+
   
 #def update_database(message):
 #  if "message" is db.key():
@@ -75,7 +81,10 @@ async def on_ready():
 
 
 
-
+#@client.event
+#async def on_guild_join(guild):
+#  channel_ = guild.channels[0]
+#  await channel_.send("Hello, Welcome to D6! Try typing 6commands for a list of commands! If there are any issues, msg dynodaan#4984. Thanks.")
 
 #when somebody sends a message
 @client.event
@@ -87,6 +96,7 @@ async def on_message(message):
 
   # to replace msg.content
   msg = message.content
+  send = message.channel
 
   #say hello if user says hello
   if msg.startswith('6hello'):
@@ -105,30 +115,39 @@ async def on_message(message):
     cats = get_cat_images()
     await message.channel.send(message.author.mention + cats)
 
+  #need to fix
+  if msg.startswith('6yesno'):
+    return
+    yesno = get_yesno_images()
+    await message.channel.send(message.author.mention + yesno)
+
   #commands list
   if msg.startswith('6commands'):
     await message.channel.send(message.author.mention + 'Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6hello, 6cases, 6cats, 6talk, etc')
+    await message.channel.send('6hello, 6cases, 6cats, 6 "words" (this is to talk to the bot), 6yesno, 6convo hello + 6end (to end convo)')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
-  if msg.startswith('6talk'):
+  if msg.startswith('6'):
     logging.info('User said to AI: ' + msg[6:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
     await message.channel.send(message.author.mention + response)
 
   #trigger to have a constant conversation with ai
-  if msg.startswith('6convo'):
-    return
-    while True:
-      logging.info('User said to AI: ' + msg[6:])
-      content = msg.partition(" ")[2]
-      response = open_ai(content)
-      await message.channel.send(message.author.mention + response)
+  if msg.startswith('6convo hello'):
+    a = True
+    await message.channel.send("Conversation Started")
+    while a:
+      if msg():
+         logging.info('User said to AI: ' + msg[6:])
+         content = msg.partition(" ")[0:]
+         response = open_ai(content)
+         await message.channel.send(message.author.mention + response)
       if msg.startswith('6end'):
-        False
+        a = False
+        await message.channel.send("Conversation Ended")
 
 
 

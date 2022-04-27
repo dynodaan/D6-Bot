@@ -2,3 +2,6 @@ plan
 text based commands for simple stuff.
 give the bot some personality in simple responses
 posting status of something.
+
+
+WELCOME PLAYERS THAT ENTER
