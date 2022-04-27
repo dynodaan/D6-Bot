@@ -6,28 +6,44 @@ import discord
 import requests
 #for API that returns json
 import json
-#import openai
+import openai
+import logging
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
+print("Logging Active")
 
 #for member caching
 intents = discord.Intents.default()
 intents.members = True
 
 token = os.environ['discord_bot_token']
-#ai_key = os.environ['open_ai_key']
-#openai.api_key = #os.getenv(os.environ['ai_key'])
+ai_key = os.environ['open_ai_key']
+
+
+
+openai.api_key = ai_key
 client = discord.Client()
 print("Bot Running")
-
-#response = openai.Completion.create(
-#engine="text-davinci-002",
-#prompt="I have heard of Open AI, but what is it?",
-#temperature=0.5,
-#max_tokens=60,
-#top_p=1.0,
-#frequency_penalty=0.5,
-#presence_penalty=0.0,
-#stop=[""])
-
+def open_ai(content):
+  response = openai.Completion.create(
+  engine="text-davinci-002",
+  prompt=content,
+  temperature=0.5,
+  max_tokens=1000,
+  top_p=1.0,
+  frequency_penalty=0.5,
+  presence_penalty=0.0,
+  #stop=[""]
+  )
+  #print(response)
+  json_data = json.loads(str(response)) #(response.text)
+  #print(json_data['choices']['text'])
+  text = (str(json_data['choices'][0]['text']))
+  return text
 
 
 #get covid cases in united kingdom
@@ -56,6 +72,10 @@ async def on_ready():
   print('We have logged in as {0.user}'.format(client))
 
 
+
+
+
+
 #when somebody sends a message
 @client.event
 async def on_message(message):
@@ -70,44 +90,41 @@ async def on_message(message):
   #say hello if user says hello
   if msg.startswith('6hello'):
     #print("6hello")
-    await message.channel.send('Hello!')
+    await message.channel.send(message.author.mention + 'Hello!')
     
   #report covid 19 cases
   if msg.startswith('6cases'):
     #print("6cases")
     cases = get_uk_cases()
-    await message.channel.send(cases)
+    await message.channel.send(message.author.mention + cases)
 
   #get and show images of cats to the user in discord
   if msg.startswith('6cats'):
     #print("6cats")
-    cases = get_cat_images()
-    await message.channel.send(cases)
+    cats = get_cat_images()
+    await message.channel.send(message.author.mention + cats)
 
   #commands list
   if msg.startswith('6commands'):
-    await message.channel.send('Hello!')
+    await message.channel.send(message.author.mention + 'Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6hello, 6cases, 6cats, 6convo, bye, etc')
+    await message.channel.send('6hello, 6cases, 6cats, 6talk, etc')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
- # if msg.startswith('6convo'):
-    #response
+  if msg.startswith('6talk'):
+    print(msg)
+    content = msg.partition(" ")[2]
+    response = open_ai(content)
+    await message.channel.send(message.author.mention + response)
 
-
-    
-  #bye bye! need to find a way to merge the two together, or doesn't work.
-  if msg.startswith('bye'):
-    #print("bye")
-    cases = get_cat_images()
-    await message.channel.send("Bye Bye!")
-
-  if msg.startswith('Bye'):
-    #print("bye")
-    cases = get_cat_images()
-    await message.channel.send("Bye Bye!")
-
+  if msg.startswith('6convo'):
+    while True:
+      content = msg.partition(" ")[2]
+      response = open_ai(content)
+      await message.channel.send(message.author.mention + response)
+      if msg.startswith('6end'):
+        False
 
 
 
