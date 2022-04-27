@@ -140,9 +140,9 @@ async def on_message(message):
     a = True
     await message.channel.send("Conversation Started")
     while a:
-      if msg():
+      if msg.startswith():
          logging.info('User said to AI: ' + msg[6:])
-         content = msg.partition(" ")[0:]
+         content = msg.partition(" ")
          response = open_ai(content)
          await message.channel.send(message.author.mention + response)
       if msg.startswith('6end'):
