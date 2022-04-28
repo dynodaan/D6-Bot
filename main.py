@@ -96,7 +96,6 @@ async def on_message(message):
 
   # to replace msg.content
   msg = message.content
-  send = message.channel
 
   #say hello if user says hello
   if msg.startswith('6hello'):
@@ -137,17 +136,18 @@ async def on_message(message):
 
   #trigger to have a constant conversation with ai
   if msg.startswith('6convo hello'):
-    a = True
     await message.channel.send("Conversation Started")
-    while a:
-      if msg.startswith():
+    while True:
+      if message.author == client.user:
+        return
+      elif msg.startswith('6end'):
+        await message.channel.send("Conversation Ended")
+        break
+      else:
          logging.info('User said to AI: ' + msg[6:])
          content = msg.partition(" ")
          response = open_ai(content)
          await message.channel.send(message.author.mention + response)
-      if msg.startswith('6end'):
-        a = False
-        await message.channel.send("Conversation Ended")
 
 
 
