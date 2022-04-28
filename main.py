@@ -10,12 +10,16 @@ import openai
 import logging
 from time import sleep
 
+
+
 #logger = logging.getLogger('discord')
 #logger.setLevel(logging.DEBUG)
 #handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 #handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 #logger.addHandler(handler)
 #print("Logging Active")
+
+#bot = commands.Bot(command_prefix='!')
 
 
 #for member caching
@@ -50,6 +54,7 @@ def open_ai(content):
 
 #get covid cases in united kingdom
 def get_uk_cases():
+  return
   response = requests.get("https://api.covid19api.com/live/country/united-kingdom/status/confirmed")
   json_data = json.loads(response.text)
   cases = str(json_data[0]['Cases']) + "  - " + json_data[0]['Country']
@@ -78,7 +83,7 @@ def get_yesno_images():
 @client.event
 async def on_ready():
   print('We have logged in as {0.user}'.format(client))
-
+  await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='over this server | 6commands for a list of commands'))
 
 
 
@@ -102,6 +107,9 @@ async def on_message(message):
   if msg.startswith('6hello'):
     #print("6hello")
     await message.channel.send(message.author.mention + 'Hello!')
+
+  if msg.startswith('6intro'):
+    await message.channel.send(message.author.mention + ' Hey there! Im D6, a chatbot designed to help make your Discord experience more fun and engaging! I can do all sorts of things, from talking to you and helping you with your server tasks! Feel free to message me with the keyword: "6", or 6talk if you want to google through me or talk to me! ')
     
   #report covid 19 cases
   if msg.startswith('6cases'):
@@ -113,7 +121,8 @@ async def on_message(message):
   if msg.startswith('6cats'):
     #print("6cats")
     cats = get_cat_images()
-    await message.channel.send(message.author.mention + cats)
+    await message.channel.send(message.author.mention)
+    await message.channel.send(cats)
 
   #need to fix
   if msg.startswith('6yesno'):
@@ -123,15 +132,16 @@ async def on_message(message):
 
   #commands list
   if msg.startswith('6commands'):
-    await message.channel.send(message.author.mention + 'Hello!')
+    await message.channel.send(message.author.mention + '')
+    await message.channel.send('Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno, 6convo hello + 6end (6end is to end convo)')
+    await message.channel.send('6intro, 6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno, [BROKEN] 6convo hello + 6end (6end is to end convo)')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
   if msg.startswith('6talk'):
-    logging.info('User said to AI: ' + msg[2:])
-    print('User said to AI: ' + msg[2:])
+    logging.info('User said to AI: ' + msg[5:])
+    #print('User said to AI: ' + msg[5:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
     await message.channel.send(message.author.mention + response)
@@ -140,6 +150,7 @@ async def on_message(message):
     
   #trigger to have a constant conversation with ai
   if msg.startswith('6convo hello'):
+    return
     await message.channel.send("Conversation Started")
     a = True
     #print("Loop activated")
