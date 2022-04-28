@@ -11,7 +11,8 @@ import logging
 from time import sleep
 
 
-
+intents = discord.Intents.default()
+intents.members = True
 #logger = logging.getLogger('discord')
 #logger.setLevel(logging.DEBUG)
 #handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -32,7 +33,7 @@ ai_key = os.environ['open_ai_key']
 
 
 openai.api_key = ai_key
-client = discord.Client()
+client = discord.Client(intents=intents)
 print("Bot Running")
 def open_ai(content):
   response = openai.Completion.create(
@@ -54,7 +55,6 @@ def open_ai(content):
 
 #get covid cases in united kingdom
 def get_uk_cases():
-  return
   response = requests.get("https://api.covid19api.com/live/country/united-kingdom/status/confirmed")
   json_data = json.loads(response.text)
   cases = str(json_data[0]['Cases']) + "  - " + json_data[0]['Country']
@@ -85,6 +85,13 @@ async def on_ready():
   print('We have logged in as {0.user}'.format(client))
   await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='over this server | 6commands for a list of commands'))
 
+#for welcome message when somebody joins
+@client.event
+async def on_member_join(member):
+  guild = client.get_guild(969304838330535957)
+  channel = guild.get_channel(969304839563644961)
+  await channel.send(f'Welcome to the server {member.mention} ! :partying_face:') # Welcome the member on the server
+  await member.send(f'Welcome to the {member.guild.name} server, {member.name}!  :partying_face:') # welcome the member on a dm
 
 
 #@client.event
@@ -113,6 +120,7 @@ async def on_message(message):
     
   #report covid 19 cases
   if msg.startswith('6cases'):
+    return
     #print("6cases")
     cases = get_uk_cases()
     await message.channel.send(message.author.mention + cases)
