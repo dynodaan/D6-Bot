@@ -8,6 +8,7 @@ import requests
 import json
 import openai
 import logging
+from time import sleep
 
 #logger = logging.getLogger('discord')
 #logger.setLevel(logging.DEBUG)
@@ -124,30 +125,44 @@ async def on_message(message):
   if msg.startswith('6commands'):
     await message.channel.send(message.author.mention + 'Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6hello, 6cases, 6cats, 6 "words" (this is to talk to the bot), 6yesno, 6convo hello + 6end (to end convo)')
+    await message.channel.send('6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno, 6convo hello + 6end (6end is to end convo)')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
-  if msg.startswith('6'):
-    logging.info('User said to AI: ' + msg[6:])
+  if msg.startswith('6talk'):
+    logging.info('User said to AI: ' + msg[2:])
+    print('User said to AI: ' + msg[2:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
     await message.channel.send(message.author.mention + response)
 
+  
+    
   #trigger to have a constant conversation with ai
   if msg.startswith('6convo hello'):
     await message.channel.send("Conversation Started")
-    while True:
+    a = True
+    #print("Loop activated")
+    while a:
+      print("loop running")
       if message.author == client.user:
+        print("Bot Spoke")
         return
       elif msg.startswith('6end'):
+        print("6end")
         await message.channel.send("Conversation Ended")
-        break
-      else:
-         logging.info('User said to AI: ' + msg[6:])
-         content = msg.partition(" ")
-         response = open_ai(content)
-         await message.channel.send(message.author.mention + response)
+        a = False
+      elif msg.startswith(''):
+        #sleep(10)
+        print("Responding to user")
+        logging.info('User said to AI: ' + msg)
+        content = msg.partition(" ")
+        response = open_ai(content)
+        await message.channel.send(message.author.mention + response)
+      
+        
+      
+      
 
 
 
