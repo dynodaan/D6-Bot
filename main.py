@@ -10,15 +10,22 @@ import openai
 import logging
 from time import sleep
 
+#for Bot+bot stuff - who thought it was a good idea to have bot, bot, Bot all as different tags
+prefix = "6"
+
+#import new additions (Bot label and commands.)
+from discord.ext import commands
+from discord.ext.commands import Bot
+
+#set the prefix with the bot
+bot = commands.Bot(command_prefix=prefix)
+bot.remove_command("help")
+
+
+
 
 intents = discord.Intents.default()
 intents.members = True
-#logger = logging.getLogger('discord')
-#logger.setLevel(logging.DEBUG)
-#handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
-#handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-#logger.addHandler(handler)
-#print("Logging Active")
 
 #bot = commands.Bot(command_prefix='!')
 
@@ -27,11 +34,12 @@ intents.members = True
 intents = discord.Intents.default()
 intents.members = True
 
+#secrets
 token = os.environ['discord_bot_token']
 ai_key = os.environ['open_ai_key']
 
 
-
+#for 6talk and 6convo, the open AI that responds to the user (GTP-3 Best Model)
 openai.api_key = ai_key
 client = discord.Client(intents=intents)
 print("Bot Running")
@@ -53,7 +61,7 @@ def open_ai(content):
   return text
 
 
-#get covid cases in united kingdom
+#get covid cases in united kingdom --- NEED TO FIX
 def get_uk_cases():
   response = requests.get("https://api.covid19api.com/live/country/united-kingdom/status/confirmed")
   json_data = json.loads(response.text)
@@ -67,23 +75,40 @@ def get_cat_images():
   cat_image = str(json_data[0]['url'])
   return(cat_image)
 
+#ask the bot for a random yes/no reponse + gif --- NEED TO FIX
 def get_yesno_images():
   response = requests.get("https://yesno.wtf/api?ref=apilist.fun")
   json_data = json.loads(response.text)
   yesno_image = str(json_data[0]['answer']) + json_data[0]['image']
   return(yesno_image)
 
-  
+  #FUTURE ADDITIONS, STORING A DATABASE OF THINGS??? WHAT THINGS?? I DONT KNOW?? SOME THINGS??
 #def update_database(message):
 #  if "message" is db.key():
 #    message = db["message"]
     
 
-#to make it work
+#When the bot is ready, set its status, and then print it's name, discord version, number of servers + servers connected to
+@bot.event
 @client.event
 async def on_ready():
-  print('We have logged in as {0.user}'.format(client))
+  #print('We have logged in as {0.user}'.format(client))
   await client.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name='over this server | 6commands for a list of commands'))
+
+  #print what bot its logged in as
+  print('Logged in as')
+  print('{0.user}'.format(client))
+  print("Discord Version: " + discord.__version__)
+  print('------')
+  print(f'Currently at {len(bot.guilds)} servers!')
+
+  #print servers connected to
+  print('Servers connected to:')
+  for guild in bot.guilds:
+        if {len(bot.guilds)} < 30:
+          print("DELTE ME")
+          print(guild.name)
+        
 
 #for welcome message when somebody joins
 @client.event
