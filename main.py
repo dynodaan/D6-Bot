@@ -171,16 +171,6 @@ async def on_message(message):
     else:
       await message.channel.send(message.author.mention + "Error | Word Limit is over 2000 characters | Please DM dynodaan#4984 if this continues")
 
-  
-    
-  #6convo deleted because it would cause complications by replying to every person on every server if activated
-      
-        
-      
-      
-
-
-
 
 
 
