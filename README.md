@@ -1,7 +1,5 @@
 # D6-Bot
-Discord Bot
-
-D6 is a Discord Bot
+D6 is a general use Discord Bot
 
 With abilities to pull Cat Images, Introduce itself and DM the user when they join a server with the bot inside.
 
