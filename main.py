@@ -23,7 +23,6 @@ bot.remove_command("help")
 
 
 
-
 intents = discord.Intents.default()
 intents.members = True
 
@@ -106,23 +105,19 @@ async def on_ready():
   print('Servers connected to:')
   for guild in bot.guilds:
         if {len(bot.guilds)} < 30:
-          print("DELTE ME")
+          #doesnt actually work
+          print("TEST PRINT --- DELTE ME")
           print(guild.name)
         
 
 #for welcome message when somebody joins
 @client.event
 async def on_member_join(member):
-  guild = client.get_guild(969304838330535957)
-  channel = guild.get_channel(969304839563644961)
-  await channel.send(f'Welcome to the server {member.mention} ! :partying_face:') # Welcome the member on the server
-  await member.send(f'Welcome to the {member.guild.name} server, {member.name}!  :partying_face:') # welcome the member on a dm
+  #guild = client.get_guild(969304838330535957)
+  #channel = guild.get_channel(969304839563644961)
+  #await channel.send(f'Welcome to the server {member.mention} ! :partying_face:') # Welcome the member on the server
+  await member.send(f' :tada: Welcome to the {member.guild.name} server, {member.name}!  :partying_face:') # welcome the member on a dm
 
-
-#@client.event
-#async def on_guild_join(guild):
-#  channel_ = guild.channels[0]
-#  await channel_.send("Hello, Welcome to D6! Try typing 6commands for a list of commands! If there are any issues, msg dynodaan#4984. Thanks.")
 
 #when somebody sends a message
 @client.event
@@ -130,7 +125,6 @@ async def on_message(message):
   if message.author == client.user:
     return
 
-  #the program
 
   # to replace msg.content
   msg = message.content
@@ -140,10 +134,11 @@ async def on_message(message):
     #print("6hello")
     await message.channel.send(message.author.mention + 'Hello!')
 
+  #respond with an introduction to 6intro
   if msg.startswith('6intro'):
     await message.channel.send(message.author.mention + ' Hey there! Im D6, a chatbot designed to help make your Discord experience more fun and engaging! I can do all sorts of things, from talking to you and helping you with your server tasks! Feel free to message me with the keyword: "6", or 6talk if you want to google through me or talk to me! ')
     
-  #report covid 19 cases
+  #report covid 19 cases --- broken
   if msg.startswith('6cases'):
     return
     #print("6cases")
@@ -157,23 +152,23 @@ async def on_message(message):
     await message.channel.send(message.author.mention)
     await message.channel.send(cats)
 
-  #need to fix
+  #responds to the 6yesno by randomly sending a yes or no + a random gif from the api --- need to fix
   if msg.startswith('6yesno'):
     return
     yesno = get_yesno_images()
     await message.channel.send(message.author.mention + yesno)
 
-  #commands list
+  #responds to 6commands by responding explainign what the commadns are
   if msg.startswith('6commands'):
     await message.channel.send(message.author.mention + '')
     await message.channel.send('Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6intro, 6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno, [BROKEN] 6convo hello + 6end (6end is to end convo)')
+    await message.channel.send('6intro, 6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
   if msg.startswith('6talk'):
-    logging.info('User said to AI: ' + msg[5:])
+    #logging.info('User said to AI: ' + msg[5:])
     #print('User said to AI: ' + msg[5:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
@@ -181,28 +176,7 @@ async def on_message(message):
 
   
     
-  #trigger to have a constant conversation with ai
-  if msg.startswith('6convo hello'):
-    return
-    await message.channel.send("Conversation Started")
-    a = True
-    #print("Loop activated")
-    while a:
-      print("loop running")
-      if message.author == client.user:
-        print("Bot Spoke")
-        return
-      elif msg.startswith('6end'):
-        print("6end")
-        await message.channel.send("Conversation Ended")
-        a = False
-      elif msg.startswith(''):
-        #sleep(10)
-        print("Responding to user")
-        logging.info('User said to AI: ' + msg)
-        content = msg.partition(" ")
-        response = open_ai(content)
-        await message.channel.send(message.author.mention + response)
+  #6convo deleted because it would cause complications by replying to every person on every server if activated
       
         
       
