@@ -79,7 +79,7 @@ def get_yesno_images():
     json_data = response.json()
 
     # Return value @image key
-    return json_data.get('image', 'answer')
+    return json_data.get('image')
 
   #FUTURE ADDITIONS, STORING A DATABASE OF THINGS??? WHAT THINGS?? I DONT KNOW?? SOME THINGS??
 #def update_database(message):
