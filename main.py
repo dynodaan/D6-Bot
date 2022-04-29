@@ -7,7 +7,7 @@ import requests
 #for API that returns json
 import json
 import openai
-import logging
+#import logging
 from time import sleep
 
 #for Bot+bot stuff - who thought it was a good idea to have bot, bot, Bot all as different tags
@@ -67,18 +67,25 @@ def get_cat_images():
   cat_image = str(json_data[0]['url'])
   return(cat_image)
 
-#ask the bot for a random yes/no reponse + gif --- NEED TO FIX
+#ask the bot for a random yes/no reponse + gif --- Fixed, Assistance by rafidini on Github
 def get_yesno_images():
-  response = requests.get("https://yesno.wtf/api?ref=apilist.fun")
-  json_data = json.loads(response.text)
-  yesno_image = str(json_data[0]['answer']) + json_data[0]['image']
-  return(yesno_image)
+    response = requests.get("https://yesno.wtf/api?ref=apilist.fun")
+
+    # Try to handle non successful GET request
+    if response.status_code != 200:
+        return None
+
+    # Get response as a dictionary
+    json_data = response.json()
+
+    # Return value @image key
+    return json_data.get('image', 'answer')
 
   #FUTURE ADDITIONS, STORING A DATABASE OF THINGS??? WHAT THINGS?? I DONT KNOW?? SOME THINGS??
 #def update_database(message):
 #  if "message" is db.key():
 #    message = db["message"]
-    
+
 
 #When the bot is ready, set its status, and then print it's name, discord version, number of servers + servers connected to
 @bot.event
@@ -139,11 +146,11 @@ async def on_message(message):
     await message.channel.send(message.author.mention)
     await message.channel.send(cats)
 
-  #responds to the 6yesno by randomly sending a yes or no + a random gif from the api --- need to fix
+  #responds to the 6yesno by randomly sending a yes or no + a random gif from the api
   if msg.startswith('6yesno'):
-    return
     yesno = get_yesno_images()
-    await message.channel.send(message.author.mention + yesno)
+    await message.channel.send(message.author.mention)
+    await message.channel.send(yesno)
 
   #responds to 6commands by responding explainign what the commadns are
   if msg.startswith('6commands'):
