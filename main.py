@@ -60,13 +60,6 @@ def open_ai(content):
   return text
 
 
-#get covid cases in united kingdom --- NEED TO FIX
-def get_uk_cases():
-  response = requests.get("https://api.covid19api.com/live/country/united-kingdom/status/confirmed")
-  json_data = json.loads(response.text)
-  cases = str(json_data[0]['Cases']) + "  - " + json_data[0]['Country']
-  return(cases)
-
 #pull cat images off the cat tumblr images api
 def get_cat_images():
   response = requests.get("https://api.thecatapi.com/v1/images/search")
@@ -138,12 +131,6 @@ async def on_message(message):
   if msg.startswith('6intro'):
     await message.channel.send(message.author.mention + ' Hey there! Im D6, a chatbot designed to help make your Discord experience more fun and engaging! I can do all sorts of things, from talking to you and helping you with your server tasks! Feel free to message me with the keyword: "6", or 6talk if you want to google through me or talk to me! ')
     
-  #report covid 19 cases --- broken
-  if msg.startswith('6cases'):
-    return
-    #print("6cases")
-    cases = get_uk_cases()
-    await message.channel.send(message.author.mention + cases)
 
   #get and show images of cats to the user in discord
   if msg.startswith('6cats'):
@@ -163,7 +150,7 @@ async def on_message(message):
     await message.channel.send(message.author.mention + '')
     await message.channel.send('Hello!')
     await message.channel.send('Commands are..')
-    await message.channel.send('6intro, 6hello, 6cases, 6cats, 6talk "words" (this is to talk to the bot), 6yesno')
+    await message.channel.send('6intro, 6hello, 6cats, 6talk "words" (this is to talk to the bot), 6yesno')
 
   #open ai ? https://beta.openai.com/examples/default-friend-chat
   #have a conversation with friend ai
@@ -172,7 +159,10 @@ async def on_message(message):
     #print('User said to AI: ' + msg[5:])
     content = msg.partition(" ")[2]
     response = open_ai(content)
-    await message.channel.send(message.author.mention + response)
+    if len(response) < 2000:
+      await message.channel.send(message.author.mention + response)
+    else:
+      await message.channel.send(message.author.mention + "Error | Word Limit is over 2000 characters | Please DM dynodaan#4984 if this continues")
 
   
     
