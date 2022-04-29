@@ -113,10 +113,28 @@ async def on_ready():
 #for welcome message when somebody joins
 @client.event
 async def on_member_join(member):
+  user = await client.fetch_user("300635308989612032")
+  await user.send(f' {member.name} Joined: {member.guild.name}')
+  await user.send('ㅤ')
   #guild = client.get_guild(969304838330535957)
   #channel = guild.get_channel(969304839563644961)
   #await channel.send(f'Welcome to the server {member.mention} ! :partying_face:') # Welcome the member on the server
   await member.send(f' :tada: Welcome to the {member.guild.name} server, {member.name}!  :partying_face:') # welcome the member on a dm
+
+@client.event
+async def on_member_remove(member):
+  user = await client.fetch_user("300635308989612032")
+  await user.send(f' {member.name} Left: {member.guild.name}')
+  await user.send('ㅤ')
+  await member.send("ㅤ")
+  await member.send(f' :wave: Farewell {member.name}, I hope your time in {member.guild.name} has been pleasant!  :cry:') # give a goodbye to the member on a dm
+  await member.send("ㅤ")
+  await member.send(f' {member.name} If you found this bot to be useful, maybe try it out on your own server? https://discord.com/api/oauth2/authorize?client_id=968592342426730507&permissions=8&scope=bot')
+  await member.send("ㅤ")
+  await member.send("Otherwise, You can suggest additions to the bot by DM's")
+  await member.send("dynodaan#4984")
+
+  
 
 
 #when somebody sends a message
@@ -124,6 +142,14 @@ async def on_member_join(member):
 async def on_message(message):
   if message.author == client.user:
     return
+
+  if not message.guild:
+        await message.channel.send('Hello, I am a bot.')
+        await message.channel.send("ㅤ")
+        await message.channel.send("I cannot respond to DM's")
+        await message.channel.send("ㅤ")
+        await message.channel.send("If you have any suggestions, DM the Developer of this bot at:")
+        await message.channel.send("dynodaan#4984")
 
 
   # to replace msg.content
