@@ -99,14 +99,14 @@ async def on_ready():
   print('{0.user}'.format(client))
   print("Discord Version: " + discord.__version__)
   print('------')
-  print(f'Currently at {len(bot.guilds)} servers!')
+  print(f'Currently at {len(client.guilds)} servers!')
 
   #print servers connected to
   print('Servers connected to:')
-  for guild in bot.guilds:
-        if {len(bot.guilds)} < 30:
+  #print(client.guilds)
+  for guild in client.guilds:
+        if len(client.guilds) < 30:
           #doesnt actually work
-          print("TEST PRINT --- DELTE ME")
           print(guild.name)
         
 
